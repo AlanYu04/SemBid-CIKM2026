@@ -40,7 +40,7 @@
 ## File List
 
 ```
-Simbid/
+SemBid/
   README.md                        # Project overview and usage
   requirements.txt                 # Minimal runtime dependencies
   code/
