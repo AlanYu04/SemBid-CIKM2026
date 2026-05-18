@@ -16,6 +16,20 @@ To assess whether SemBid's performance depends on dataset-specific template engi
 
 The unified template still outperforms DT by +11.4%, confirming that semantic information---not template engineering---is the primary driver. The gap between separate and unified templates (412.20 vs. 396.45, -3.8%) reflects the benefit of regime-specific prompt calibration, but the core gain over DT is preserved even without it.
 
+## Task Token Injection Strategy
+
+We compare three Task injection strategies: injecting the full embedding at every step (current design), injecting only at the first step, and replacing Task with a zero vector.
+
+| Task Injection Mode | Score |
+|---|---|
+| Full per-step (current) | **412.20** |
+| First step only | 395.31 |
+| No Task | 387.52 |
+
+**Setup:** AuctionNet-High, 100% budget.
+
+Per-step injection keeps the Task--State distance short and constant, enabling strong local attention. First-step-only injection causes the distance to grow with t, reducing Task's influence on later decisions.
+
 ## Penalty Sensitivity
 
 Following the evaluation protocol, we sweep the CPA penalty exponent β ∈ {0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 4.0}. SemBid remains the best-performing method under all settings with only ±1.3% score variation, confirming that its advantage is not tied to a specific penalty choice.
