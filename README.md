@@ -197,3 +197,14 @@ python code/Testing/test.py \
 - For consistent evaluation, use the same `embedding_lookup` generated during preprocessing.
 - Training expects a precomputed embedding PKL (Task/History/Strategy embeddings included).
 - Update any absolute paths to your local setup.
+
+## Supplementary Results
+
+Additional experimental results and implementation details referenced in the paper appendix are available in [`docs/supplementary_results.md`](docs/supplementary_results.md), including:
+
+- Template generalization ablation (Table 7)
+- Penalty sensitivity analysis
+- Environment characterization per conversion level
+- State feature engineering (16-dim feature definitions)
+- Prompt template details and discretization rules
+- Full implementation details and baseline configurations
