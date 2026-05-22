@@ -2,6 +2,69 @@
 
 This document contains additional experimental results and implementation details referenced in the appendix of the main paper.
 
+
+## Additional Appendix Tables
+
+The camera-ready appendix keeps only compact summaries in the main PDF. The full numerical tables below provide the detailed evidence referenced by the appendix text.
+
+### Embedding Source Ablation
+
+This ablation separates aligned language semantics from additional model capacity, categorical prompt identity, and incidental embedding geometry. All results are measured at 100% budget.
+
+| Method | AuctionNet-High | AuctionNet-Medium | AuctionNet-Low |
+|---|---:|---:|---:|
+| DT (Baseline) | 356.14 | 263.50 | 30.00 |
+| MLP Numeric | 340.25 | 256.05 | 26.42 |
+| One-hot | 352.30 | 265.16 | 25.78 |
+| Shuffled LLM | 358.95 | 270.16 | 27.87 |
+| Random Init | 365.37 | 275.00 | 28.37 |
+| **SemBid** | **412.20** | **310.19** | **32.00** |
+
+SemBid consistently outperforms numerical, one-hot, shuffled, and randomly initialized alternatives, supporting the claim that aligned language semantics drive the gains.
+
+### CQL with Concatenated Semantic Features
+
+To test whether semantics help a non-transformer offline RL baseline, we concatenate the same LLM-encoded semantic embeddings (Task, History, Strategy) to CQL's state vector while keeping other CQL hyperparameters unchanged.
+
+| Budget | CQL | CQL+Semantics | SemBid |
+|---|---:|---:|---:|
+| 50% | 221.89 | 228.56 | **238.20** |
+| 75% | 314.97 | 316.84 | **320.60** |
+| 100% | 377.79 | 386.42 | **412.20** |
+| 125% | 425.77 | 437.15 | **474.87** |
+| 150% | 492.79 | 505.31 | **541.76** |
+
+Concatenated semantic features improve CQL over most budget settings but remain below SemBid, indicating that simple feature-level fusion is insufficient compared with token-level semantic integration.
+
+### Deployment Latency
+
+Semantic embeddings are precomputed and retrieved by lookup during deployment. Latency is measured on a single NVIDIA A100 GPU.
+
+| Model | Mean | P95 | P99 |
+|---|---:|---:|---:|
+| DT | 7.48 ms | 15.81 ms | 18.41 ms |
+| **SemBid** | **8.99 ms** | **19.30 ms** | **25.00 ms** |
+| GAS | 9.36 ms | 19.68 ms | 25.35 ms |
+
+### Dataset Statistics
+
+| Params | Low conversion | Medium conversion | High conversion |
+|---|---:|---:|---:|
+| Trajectories | 17,773 | 17,257 | 17,257 |
+| Delivery periods | 8,371 | 8,253 | 8,253 |
+| Time steps in a trajectory | 48 | 48 | 48 |
+| State dimension | 16 | 16 | 16 |
+| Action dimension | 1 | 1 | 1 |
+| Return-to-go dimension | 1 | 1 | 1 |
+| Action range | [0.0, 2960.53] | [0.0, 145.47] | [0.0, 145.47] |
+| Impression value range | [0, 1] | [0, 1] | [0, 1] |
+| CPA range | [60.0, 130.0] | [15.0, 50.0] | [6.0, 12.0] |
+| Total conversion range | [0.0, 96.0] | [0, 907.5368] | [0.0, 1475.0] |
+
+## Prompt Complementarity
+
+CCA shows low overall redundancy across prompt categories (average CCA = 0.123), indicating that Task, History, and Strategy capture distinct decision factors. In linear probing, combining all three prompt categories reaches R² = 0.204, a +52.3% gain over the best single category. These results support compositional semantic injection rather than collapsing all semantic information into a single prompt. Detailed preliminary-study tables are available in `supplementary/preliminary_study.md`.
+
 ## Template Generalization
 
 To assess whether SemBid's performance depends on dataset-specific template engineering, we compare using separate templates per conversion regime against a single unified template where constraint thresholds are normalized to a common range.
@@ -94,7 +157,7 @@ All methods are trained for 800k steps under the same evaluation protocol.
 
 **SemBid architecture:**
 - 6-layer causal Transformer (4 attention heads, hidden dimension 128)
-- Frozen Qwen-0.5B semantic encoder projected to 2048-d via a random linear layer
+- Frozen Qwen2.5-0.5B-Instruct semantic encoder projected to 2048-d via a random linear layer
 - SemBid parameter count: 2.8M
 
 **Checkpoint and evaluation:**

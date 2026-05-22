@@ -21,7 +21,7 @@
 
 <table>
   <tr>
-    <td><b>LLM Inference Infra</b><br>Qwen2.5-0.5B embeddings<br>Lookup table for test-time speed</td>
+    <td><b>LLM Inference Infra</b><br>Qwen2.5-0.5B-Instruct checkpoint embeddings<br>Lookup table for test-time speed</td>
     <td><b>Multi-Agent</b><br>Per-advertiser evaluation agents<br>Offline simulation rollouts</td>
   </tr>
   <tr>
@@ -130,7 +130,7 @@ Test CSV must include at least:
 2) For each row, compute `prev_state` and `prev_action` within each trajectory.  
 3) Use a template module (`sembid_templates_high` or `sembid_templates_low`) to generate
    Task/History/Strategy text per row.  
-4) Encode those texts with Qwen/Qwen2.5-0.5B-Instruct into embeddings (default 2048-d).  
+4) Encode those texts with the Qwen2.5-0.5B-Instruct checkpoint from the Qwen2.5 model family into embeddings (default 2048-d).  
 5) Save the DataFrame (including embedding columns) to `trajectory_data_2048.pkl`.
 
 ## Preprocess (CSV -> PKL + embedding lookup)
@@ -192,7 +192,7 @@ python code/Testing/test.py \
 ## Notes
 
 - GPU required for training/testing.
-- Qwen/Qwen2.5-0.5B-Instruct is required for on-the-fly prompt encoding when `--embedding_lookup` is not provided.
+- The Qwen2.5-0.5B-Instruct checkpoint is required for on-the-fly prompt encoding when `--embedding_lookup` is not provided.
 - Using `--embedding_lookup` skips on-the-fly Qwen encoding and avoids model download at test time.
 - For consistent evaluation, use the same `embedding_lookup` generated during preprocessing.
 - Training expects a precomputed embedding PKL (Task/History/Strategy embeddings included).

@@ -10,7 +10,7 @@ This study validates four aspects: (1) semantic content in LLM embeddings, (2) l
 
 We first verify whether LLM embeddings encode bidding-relevant information or are merely random noise. We adopt linear probing: if a simple linear model can predict bidding actions from embeddings, the representations contain task-relevant information.
 
-We first **render numerical bidding states into natural-language text** using rule-based templates (e.g., "Budget: 80%. pValue: High. Time remaining: 2 hours."), and then **encode the text** with a frozen Qwen-0.5B to obtain state embeddings. We compare against random baselines. Crucially, we include a shuffled test where **sample–embedding correspondences are randomized** to remove semantic alignment while preserving the embedding distribution.
+We first **render numerical bidding states into natural-language text** using rule-based templates (e.g., "Budget: 80%. pValue: High. Time remaining: 2 hours."), and then **encode the text** with a frozen Qwen2.5-0.5B-Instruct checkpoint to obtain state embeddings. We compare against random baselines. Crucially, we include a shuffled test where **sample–embedding correspondences are randomized** to remove semantic alignment while preserving the embedding distribution.
 
 | Input Type | R² | vs Random |
 |---|---|---|
@@ -28,11 +28,11 @@ Given that LLM embeddings contain useful semantics, a natural question arises: c
 
 | Input Type | R² | MSE | MAE |
 |---|---|---|---|
-| Numerical Features Only | 0.847 | 6.098 | 1.417 |
+| Numerical Features Only | 0.880 | 6.01 | 1.42 |
 | LLM Embedding Only | 0.121 | 35.499 | 3.52 |
-| Numerical + Embedding | 0.852 | 5.89 | 1.38 |
+| Numerical + Embedding | 0.886 | 5.89 | 1.38 |
 
-Results indicate that embeddings alone are insufficient. Numerical features achieve R²=0.847, while semantic embeddings alone reach only 0.121 — an 85.7% performance gap. This is expected: bidding requires fine-grained numerical reasoning (e.g., budget levels, conversion likelihoods, and cost accounting) that cannot be faithfully represented by language alone. Therefore, **semantic signals should complement, not replace, numerical features**.
+Results indicate that embeddings alone are insufficient. Numerical features achieve R²=0.880, while semantic embeddings alone reach only 0.121 — an 86.25% performance gap. This is expected: bidding requires fine-grained numerical reasoning (e.g., budget levels, conversion likelihoods, and cost accounting) that cannot be faithfully represented by language alone. When integrated with the numerical features, semantic embeddings improve the result to R²=0.886. Therefore, **semantic signals should complement, not replace, numerical features**.
 
 ---
 
@@ -108,7 +108,7 @@ Simple concatenation performs worst, degrading performance by 3.41%. This sugges
 These preliminary experiments provide concrete evidence supporting SemBid's design:
 
 - **LLM embeddings encode bidding semantics** (+946% over random; shuffling correspondence removes predictive power).
-- **Embeddings alone are insufficient** (85.7% gap vs numerical features).
+- **Embeddings alone are insufficient** (86.25% gap vs numerical features).
 - **Prompt types exhibit complementarity** (Task/History/Strategy combined yields +52.3% over the best single category).
 - **Proper fusion matters**: self-attention improves over naive concatenation and yields the strongest performance.
 

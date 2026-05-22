@@ -23,7 +23,7 @@ def set_seed(seed):
 
 
 class QwenEncoder2048:
-    """Qwen-0.5B encoder with 2048-d output (896 -> 2048 projection)."""
+    """Qwen2.5-0.5B-Instruct encoder with 2048-d output (896 -> 2048 projection)."""
 
     def __init__(self, output_dim=2048, model_name="Qwen/Qwen2.5-0.5B-Instruct",
                  device=None, max_length=256, seed=42, projection_path=None):

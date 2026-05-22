@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Standard test script (GAS/GAVE-style budget handling).
-Qwen-0.5B + 2048-d SemBid test (History/Strategy before State).
+Qwen2.5-0.5B-Instruct + 2048-d SemBid test (History/Strategy before State).
 """
 import sys
 import torch
@@ -38,7 +38,7 @@ logger = logging.getLogger(__name__)
 
 
 class QwenEncoder2048:
-    """Qwen-0.5B encoder with 2048-d output."""
+    """Qwen2.5-0.5B-Instruct encoder with 2048-d output."""
 
     def __init__(self, output_dim=2048, model_name="Qwen/Qwen2.5-0.5B-Instruct", device="cuda", max_length=256):
         from transformers import AutoTokenizer, AutoModelForCausalLM
@@ -47,7 +47,7 @@ class QwenEncoder2048:
         self.output_dim = output_dim
         self.max_length = max_length
 
-        logger.info(f"Initializing Qwen-0.5B encoder ({output_dim}-d)...")
+        logger.info(f"Initializing Qwen2.5-0.5B-Instruct encoder ({output_dim}-d)...")
         self.tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
         if self.tokenizer.pad_token is None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
@@ -95,7 +95,7 @@ class QwenEncoder2048:
 
 
 class BiddingStrategy:
-    """Qwen-0.5B + 2048-d strategy (standard)."""
+    """Qwen2.5-0.5B-Instruct + 2048-d strategy (standard)."""
 
     def __init__(self, model_dir, budget, cpa, category, device='cuda',
                  shared_encoder=None, language_emb_dim=2048, embedding_lookup=None,
@@ -184,7 +184,7 @@ class BiddingStrategy:
             logger.info("Using precomputed embedding lookup (2048-d)")
         elif shared_encoder:
             self.encoder = shared_encoder
-            logger.info("Using shared Qwen-0.5B encoder (2048-d)")
+            logger.info("Using shared Qwen2.5-0.5B-Instruct encoder (2048-d)")
         else:
             self.encoder = QwenEncoder2048(output_dim=language_emb_dim, device=device)
 
@@ -428,7 +428,7 @@ def run_test(model_dir, test_file, budget_ratio=1.0, language_emb_dim=2048,
              embedding_lookup=None, language_generator_cls=None):
     """Run standard test with GAS/GAVE-style budget handling."""
     logger.info("="*80)
-    logger.info("Qwen-0.5B + 2048-d Test (standard, History/Strategy before State)")
+    logger.info("Qwen2.5-0.5B-Instruct + 2048-d Test (standard, History/Strategy before State)")
     logger.info(f"Model: {os.path.basename(model_dir)}")
     logger.info(f"Test data: {os.path.basename(test_file)}")
     logger.info("="*80)
@@ -446,7 +446,7 @@ def run_test(model_dir, test_file, budget_ratio=1.0, language_emb_dim=2048,
     # Shared Qwen encoder (only needed without lookup table).
     shared_encoder = None
     if embedding_lookup is None:
-        logger.info("Initializing shared Qwen-0.5B encoder (2048-d)...")
+        logger.info("Initializing shared Qwen2.5-0.5B-Instruct encoder (2048-d)...")
         shared_encoder = QwenEncoder2048(output_dim=language_emb_dim)
         logger.info("Shared encoder ready")
     else:
@@ -616,7 +616,7 @@ def run_test(model_dir, test_file, budget_ratio=1.0, language_emb_dim=2048,
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Qwen-0.5B + 2048-d test (standard)')
+    parser = argparse.ArgumentParser(description='Qwen2.5-0.5B-Instruct + 2048-d test (standard)')
     parser.add_argument('--model_dir', type=str, required=True, help='Model directory path')
     parser.add_argument('--budget_ratio', type=float, default=1.0, help='Budget ratio')
     parser.add_argument('--result_suffix', type=str, default="",
@@ -631,7 +631,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     logger.info("="*80)
-    logger.info("Qwen-0.5B + 2048-d test start (standard)")
+    logger.info("Qwen2.5-0.5B-Instruct + 2048-d test start (standard)")
     logger.info("="*80)
 
     # Load embedding lookup if provided.

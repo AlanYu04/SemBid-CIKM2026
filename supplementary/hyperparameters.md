@@ -4,7 +4,7 @@
 
 We adopt a Language-Guided Decision Transformer. Unlike standard implementations, we utilize high-dimensional semantic embeddings to preserve the rich information from the LLM.
 
-**Semantic Embedding Upscaling:** The base embeddings from Qwen-0.5B (d=896) are projected to a higher dimension (d=2048) using a randomized linear projection layer during preprocessing. These pre-computed embeddings are then fed into the Decision Transformer.
+**Semantic Embedding Upscaling:** The base embeddings from the Qwen2.5-0.5B-Instruct checkpoint (d=896) are projected to a higher dimension (d=2048) using a randomized linear projection layer during preprocessing. These pre-computed embeddings are then fed into the Decision Transformer.
 
 | Category | Parameter | Value |
 |---|---|---|
@@ -14,7 +14,7 @@ We adopt a Language-Guided Decision Transformer. Unlike standard implementations
 | | Feedforward Dimension | 512 |
 | | Activation Function | GELU |
 | | Dropout Rate | 0.1 |
-| **Semantic Encoder** | LLM Backbone | Qwen-0.5B (Frozen) |
+| **Semantic Encoder** | LLM Backbone | Qwen2.5-0.5B-Instruct (Frozen) |
 | | Projection Type | Random Linear (896 → 2048) |
 | | Input Embedding Dim | 2048 |
 | **Training** | Optimizer | AdamW |
@@ -27,5 +27,5 @@ We adopt a Language-Guided Decision Transformer. Unlike standard implementations
 ## Computational Resources
 
 - **Hardware:** 1 × NVIDIA A100 (40GB) GPU.
-- **Preprocessing:** Offline embedding generation with Qwen-0.5B took ~2 hours.
+- **Preprocessing:** Offline embedding generation with Qwen2.5-0.5B-Instruct took ~2 hours.
 - **Training:** The model was trained for 800k steps with persistent data workers.
